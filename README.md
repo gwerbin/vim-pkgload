@@ -158,7 +158,9 @@ PkgAdd vim-surround
 
 PkgCollect
 
-" Load plug-install.vim in place of my Vimrc, run the install commands, and quit
+" Create a command that will use plug-install.vim in place of my Vimrc,
+" run the install commands, and quit. This lets me run :DoPlug without
+" having to load a bunch of plugins that I might not want to use right now.
 execute 'command! DoPlug :!nvim -u ~/.config/nvim/plug-install.vim' .
     \' -c PlugUpgrade -c PlugInstall -c PlugUpdate -c UpdateRemotePlugins -c qa'
 ```
