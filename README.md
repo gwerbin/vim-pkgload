@@ -159,8 +159,7 @@ PkgAdd vim-surround
 PkgCollect
 
 " Load plug-install.vim in place of my Vimrc, run the install commands, and quit
-let s:plug_install = 'C:\Users\GMWERB\AppData\Local\nvim\plug-install.vim'
-execute 'command! DoPlug :!nvim -u '.s:plug_install.
+execute 'command! DoPlug :!nvim -u ~/.config/nvim/plug-install.vim' .
     \' -c PlugUpgrade -c PlugInstall -c PlugUpdate -c UpdateRemotePlugins -c qa'
 ```
 
