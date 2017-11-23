@@ -328,4 +328,6 @@ Todos
 - Deprecate PkgAddIf and use an options dictionary à la Plug.
 - Write tests and check for startup performance issues.
 - Consider changing function names: am I "adding" or "staging"?
-- Add a table of contents to the documentation
+- Set up on-package-stage, on-package-load, and on-package-fail autocommands
+- How can I make it possible to "unload" a plugin?? Experiment by "diffing"
+  options, autocommands, etc.
