@@ -1,6 +1,23 @@
 Pkgman = 📦 + 👨 
 ================
 
+* [Introduction](#introduction)
+  + [What is it?](#what-is-it)
+  + [Why should I use it?](#why-should-i-use-it)
+  + [Differences with Pathogen](#differences-with-pathogen)
+* [Usage](#usage)
+  + [Example vimrc](#example-vimrc)
+  + [Usage alongisde a plugin manager](#usage-alongisde-a-plugin-manager)
+* [Installation](#installation)
+* [How it works](#how-it-works)
+* [Reference](#reference)
+  + [Commands](#commands)
+  + [Options](#options)
+  + [Functions](#functions)
+  + [Internals](#internals)
+* [License](#license)
+* [Todos](#todos)
+
 Introduction
 ------------
 
