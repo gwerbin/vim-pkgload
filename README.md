@@ -1,4 +1,4 @@
-Pkgman = 👨 + 📦
+Pkgman = 📦 + 👨 
 ================
 
 Introduction
