@@ -1,9 +1,10 @@
-Pkgman
-======
+Pkgman = 👨 + 📦
+================
 
-= :package: + :man:
+Introduction
+------------
 
-## What is it?
+### What is it?
 
 This is a plugin loader. It is **_not_** a plugin manager. It does not download
 or install plugins. It just helps you load them. It is very similar to
@@ -28,22 +29,45 @@ including [Vundle](https://github.com/VundleVim/Vundle.vim),
 [Flavor](https://relishapp.com/kana/vim-flavor). See [Usage](#usage) for
 instructions on using these programs together.
 
+### Why should I use it?
+
+You should use Pkgman if:
+- You do not like to mix "loading" and "installation".
+- You want to exercise control over what you load and when you load it.
+- You want to be able to programmatically examine packages that have
+  been loaded.
+- You want to be able to reload packages on-the-fly without reloading
+  your initialization file or restarting Vim.
+- You are already comfortable with a Vim plugin manager, or you do not
+  mind installing and upgrading lots of plugins by hand.
+- You are a Pathogen user and you are curious.
+- You are a plugin developer or just a perfectionist Vim hacker, and you
+  want an easy way to load plugins dynamically.
+
+You should not use Pkgman if:
+- You like the fact that most plugin managers also load plugins for you.
+- You don't use a lot of plugins.
+- You don't want to have to manage plugins separately, and/or your don't
+  want to use or learn a second piece of software for plugin management.
+
 ### Differences with Pathogen
 
 **Pkgman**:
 - Plugins must be explicitly marked for loading with `:PkgAdd`.
-- Plugins are loaded explicitly with `:PkgCollect`.
+- Plugins are loaded explicitly and individually with `:PkgCollect` at any time.
 - Plugins are loaded from `pack/*/opt/`, but this can be changed by setting
-  `'packpath'`. Packages placed under `pack/*/start` are loaded automatically by
+  `'packpath'`. Plugins placed under `pack/*/start` are loaded automatically by
   Vim (see `:help plugins`).
-- Pkgman gives the user fine control over which plugins are loaded and when they
-  are loaded.
+- Pkgman is designed to give the user fine control over which plugins are loaded
+  and when they are loaded.
 - Pkgman is brand new and only works on Vim 8 or recent versions of Neovim.
-- I am just a random guy who likes Neovim.
+- I have very little open-source "cred". I am just a guy who likes Neovim.
 
 **Pathogen**:
 - Plugins are loaded implicitly unless blacklisted.
-- Plugins are loaded explicitly with `pathogen#infect()`.
+- Plugins are loaded explicitly with `pathogen#infect()` at any time, but only
+  all together. It is cumbersome to swap packages in and out of the blacklist
+  in order to reload them individually.
 - Plugins are loaded from `bundle/` and `pack/*/start/` by default, but this
   can be changed by passing a different path to `pathogen#infect()`.
 - Pathogen is designed for users to automatically load several plugins at once
@@ -57,18 +81,18 @@ instructions on using these programs together.
   classic [Git commit message style guide](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html).
 
 
-## Basic Usage
+Usage
+-----
 
-1. Install packages to `pack/*/opt/` or `pack/*/opt/`. Let's say you have
-   `pack/plugins/opt/vim-surround` and `pack/plugins/opt/vim-unimpaired`.
+1. Install packages to `pack/*/opt/` or `pack/*/opt/`.
 2. Use `:PkgAdd` to "stage" a package.
-3. Use `:PkgCollect` to load all of the staged packages.
+3. Use `:PkgCollect` to load all of the staged packages and clear the staging list.
 
 You can use `:PkgAdd` and `:PkgCollect` anywhere, at any time. When
 `:PkgCollect` is used in an interactive session, the staged packages are loaded
 immediately.
 
-### Example
+### Example vimrc
 
 ```vim
 PkgAdd justify
@@ -81,7 +105,67 @@ PkgAddIf vim-airline-themes vim-airline
 PkgCollect
 ```
 
-## Installation
+### Usage alongisde a plugin manager
+
+Pkgman does not download or install plugins. Therefore I claim that it does not
+"manage" them. I recommend using another program to manage plugins.
+
+I personally use [Plug](https://github.com/junegunn/vim-plug). Here is my setup:
+
+**directory structure**
+```
+.
+├─ init.vim
+├─ plug-install.vim
+├─ autoload/
+│  └─ plug.vim
+└─ pack/
+   ├─ plug/
+   │  ├─ asyncrun/                           ─┐
+   │  ├─ neoterm/                             │ These directories
+   │  ├─ vim-surround/                        │ are managed by Plug
+   │  └─ vim-unimpaired/                     ─┘
+   ├─ github/                                ─┐
+   │  └─ ... stuff i cloned from GitHub ...   │ These directories
+   └─ local/                                  │ are managed by me
+      └─ ... my own projects ...             ─┘
+```
+
+**init.vim**
+```vim
+PkgAdd asyncrun.vim
+
+" Disable a package without uninstalling it
+"PkgAdd neoterm
+
+PkgAdd vim-unimpaired
+PkgAdd vim-surround
+
+" Load plug-install.vim in place of my Vimrc, run the install commands, and quit
+let s:plug_install = 'C:\Users\GMWERB\AppData\Local\nvim\plug-install.vim'
+execute 'command! DoPlug :!nvim -u '.s:plug_install.
+    \' -c PlugUpgrade -c PlugInstall -c PlugUpdate -c UpdateRemotePlugins -c qa'
+```
+
+**plug-install.vim**
+```vim
+" Set up the correct path to my plugins
+if utils#get_platform() =~? 'win'
+  let s:path = utils#join_path($LOCALAPPDATA, 'nvim\site\pack\plug\opt')
+else
+  let s:path = utils#join_path($XDG_DATA_HOME, 'nvim/site/pack/plug/opt')
+endif
+
+call plug#begin(s:path)
+Plug 'skywind3000/asyncrun.vim'
+Plug 'kassio/neoterm'
+Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-surround'
+call plug#end()
+```
+
+Installation
+------------
 
 Download and extract, or clone, into:
 
@@ -96,12 +180,14 @@ If you keep your configuration files under version control using Git, it might
 make sense to include this repository as a submodule or subtree.
 
 
-## How it works
+How it works
+------------
 
-asdf
+![Data flow diagram](flow.png)
 
 
-## Reference
+Reference
+------------
 
 ### Commands
 
@@ -187,7 +273,7 @@ pkgman#pkg_add(String pkg, Int force, Int bypass_syn)
 shorter and cleaner. You can implement similar functionality, or richer
 functionality, by using `:if` and other VimL language elements.
 
-### Internal access
+### Internals
 
 The staged plugins can be inspected and modified before `:PkgCollect` is run.
 
@@ -196,7 +282,8 @@ List g:pkgman_staged_plugins = []
   A list of names of staged plugins.
 ```
 
-## License
+License
+-------
 
 This program is [free, as in freedom](https://www.gnu.org/licenses/quick-guide-gplv3.html).
 
@@ -218,10 +305,12 @@ This program is [free, as in freedom](https://www.gnu.org/licenses/quick-guide-g
 
 <script src="https://widget.battleforthenet.com/widget.js" async></script>
 
-## Todos
+Todos
+-----
 
 - Make it possible to specify specifically which "repo" (subdirectory of
   `pack/`) to load a package from.
 - Deprecate PkgAddIf and use an options dictionary à la Plug.
 - Write tests and check for startup performance issues.
 - Consider changing function names: am I "adding" or "staging"?
+- Add a table of contents to the documentation

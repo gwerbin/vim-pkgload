@@ -1,0 +1,152 @@
+digraph "_anonymous_0" {
+	graph [
+		fontsize = "14"
+		fontname = "Times-Roman"
+		fontcolor = "black"
+	]
+	node [
+		fontsize = "14"
+		fontname = "Times-Roman"
+		fontcolor = "black"
+		shape = "ellipse"
+		style = "solid"
+	]
+	edge [
+		fontsize = "14"
+		fontname = "Times-Roman"
+		fontcolor = "black"
+		style = "solid"
+	]
+	":PkgAdd" [
+		fontsize = "14"
+		fontname = "Times-Roman"
+		fontcolor = "black"
+		shape = "ellipse"
+		style = "solid"
+	]
+	":PkgAddIf" [
+		fontsize = "14"
+		fontname = "Times-Roman"
+		fontcolor = "black"
+		shape = "ellipse"
+		style = "solid"
+	]
+	":PkgCollect" [
+		fontsize = "14"
+		fontname = "Times-Roman"
+		fontcolor = "black"
+		shape = "ellipse"
+		style = "solid"
+	]
+	"pkgman#pkg_stage_if()" [
+		fontsize = "14"
+		fontname = "Times-Roman"
+		fontcolor = "black"
+		shape = "ellipse"
+		style = "solid"
+	]
+	"pkgman#pkg_stage()" [
+		fontsize = "14"
+		fontname = "Times-Roman"
+		fontcolor = "black"
+		shape = "ellipse"
+		style = "solid"
+	]
+	"pkgman#pkg_collect()" [
+		fontsize = "14"
+		fontname = "Times-Roman"
+		fontcolor = "black"
+		shape = "ellipse"
+		style = "solid"
+	]
+	"pkgman#pkg_add()" [
+		fontsize = "14"
+		fontname = "Times-Roman"
+		fontcolor = "black"
+		shape = "ellipse"
+		style = "solid"
+	]
+	subgraph "commands" {
+		graph [
+			fontsize = "14"
+			fontname = "Times-Roman"
+			fontcolor = "black"
+			label = "Commands"
+		]
+		node [
+			fontsize = "14"
+			fontname = "Times-Roman"
+			fontcolor = "black"
+			shape = "ellipse"
+			style = "solid"
+		]
+		edge [
+			fontsize = "14"
+			fontname = "Times-Roman"
+			fontcolor = "black"
+			style = "solid"
+		]
+		":PkgAdd"
+		":PkgAddIf"
+		":PkgCollect"
+	}
+	subgraph "functions" {
+		graph [
+			fontsize = "14"
+			fontname = "Times-Roman"
+			fontcolor = "black"
+		]
+		node [
+			fontsize = "14"
+			fontname = "Times-Roman"
+			fontcolor = "black"
+			shape = "ellipse"
+			style = "solid"
+		]
+		edge [
+			fontsize = "14"
+			fontname = "Times-Roman"
+			fontcolor = "black"
+			style = "solid"
+		]
+		"pkgman#pkg_stage_if()"
+	}
+	":PkgAdd" -> "pkgman#pkg_stage()" [
+		fontsize = "14"
+		fontname = "Times-Roman"
+		fontcolor = "black"
+		style = "solid"
+	]
+	":PkgAddIf" -> "pkgman#pkg_stage_if()" [
+		fontsize = "14"
+		fontname = "Times-Roman"
+		fontcolor = "black"
+		style = "solid"
+	]
+	":PkgCollect" -> "pkgman#pkg_collect()" [
+		fontsize = "14"
+		fontname = "Times-Roman"
+		fontcolor = "black"
+		style = "solid"
+	]
+	"pkgman#pkg_stage_if()" -> "pkgman#pkg_stage()" [
+		fontsize = "14"
+		fontname = "Times-Roman"
+		fontcolor = "black"
+		label = "Check dependencies"
+		style = "solid"
+	]
+	"pkgman#pkg_stage()" -> "pkgman#pkg_collect()" [
+		fontsize = "14"
+		fontname = "Times-Roman"
+		fontcolor = "black"
+		style = "solid"
+	]
+	"pkgman#pkg_collect()" -> "pkgman#pkg_add()" [
+		fontsize = "14"
+		fontname = "Times-Roman"
+		fontcolor = "black"
+		label = "Foreach"
+		style = "solid"
+	]
+}
