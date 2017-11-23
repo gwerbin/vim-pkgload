@@ -303,8 +303,6 @@ This program is [free, as in freedom](https://www.gnu.org/licenses/quick-guide-g
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-<script src="https://widget.battleforthenet.com/widget.js" async></script>
-
 Todos
 -----
 
