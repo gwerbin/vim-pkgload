@@ -1,4 +1,4 @@
-Pkgman = 📦 + 👨 
+Pkgload = 📦 + 👨 
 ================
 
 * [Introduction](#introduction)
@@ -28,17 +28,17 @@ or install plugins. It just helps you load them. It is very similar to
 [Pathogen](https://github.com/tpope/vim-pathogen). See next section for a
 comparison.
 
-In fact, Pkgman is mostly a wrapper around `:packadd`, a command that was added
-in Vim 8 and in recent releases of Neovim. Pkgman adds some convenience
+In fact, Pkgload is mostly a wrapper around `:packadd`, a command that was added
+in Vim 8 and in recent releases of Neovim. Pkgload adds some convenience
 utilities and affords precise control over package loading without bloating your
 configuration files. This makes it easier to manage large numbers of plugins.
-I believe Pkgman provides enough control that it can be used to incorporate
+I believe Pkgload provides enough control that it can be used to incorporate
 external Vim plugins in Vim development work, and it is itself simple
 enough to be included in an external package repository.
 
-Pkgman is fundamentally different from the various package managers available
+Pkgload is fundamentally different from the various package managers available
 for Vim nowadays. In fact, I strongly recommend that you use a plugin manager in
-conjunction with Pkgman. There are several high-quality options available,
+conjunction with Pkgload. There are several high-quality options available,
 including [Vundle](https://github.com/VundleVim/Vundle.vim),
 [Plug](https://github.com/junegunn/vim-plug),
 [Dein](https://github.com/Shougo/dein.vim),
@@ -48,7 +48,7 @@ instructions on using these programs together.
 
 ### Why should I use it?
 
-You should use Pkgman if:
+You should use Pkgload if:
 - You do not like to mix "loading" and "installation".
 - You want to exercise control over what you load and when you load it.
 - You want to be able to programmatically examine packages that have
@@ -61,7 +61,7 @@ You should use Pkgman if:
 - You are a plugin developer or just a perfectionist Vim hacker, and you
   want an easy way to load plugins dynamically.
 
-You should not use Pkgman if:
+You should not use Pkgload if:
 - You like the fact that most plugin managers also load plugins for you.
 - You don't use a lot of plugins.
 - You don't want to have to manage plugins separately, and/or your don't
@@ -69,15 +69,15 @@ You should not use Pkgman if:
 
 ### Differences with Pathogen
 
-**Pkgman**:
+**Pkgload**:
 - Plugins must be explicitly marked for loading with `:PkgAdd`.
 - Plugins are loaded explicitly and individually with `:PkgCollect` at any time.
 - Plugins are loaded from `pack/*/opt/`, but this can be changed by setting
   `'packpath'`. Plugins placed under `pack/*/start` are loaded automatically by
   Vim (see `:help plugins`).
-- Pkgman is designed to give the user fine control over which plugins are loaded
+- Pkgload is designed to give the user fine control over which plugins are loaded
   and when they are loaded.
-- Pkgman is brand new and only works on Vim 8 or recent versions of Neovim.
+- Pkgload is brand new and only works on Vim 8 or recent versions of Neovim.
 - I have very little open-source "cred". I am just a guy who likes Neovim.
 
 **Pathogen**:
@@ -124,7 +124,7 @@ PkgCollect
 
 ### Usage alongisde a plugin manager
 
-Pkgman does not download or install plugins. Therefore I claim that it does not
+Pkgload does not download or install plugins. Therefore I claim that it does not
 "manage" them. I recommend using another program to manage plugins.
 
 I personally use [Plug](https://github.com/junegunn/vim-plug). Here is my setup:
@@ -187,11 +187,11 @@ Installation
 Download and extract, or clone, into:
 
 - Vim:
-  - Windows: `%USERPROFILE%\vimfiles\pack\pkgman\opt\pkgman`
-  - Mac, Unix: `$HOME/.vim/pack/pkgman/opt/pkgman`
+  - Windows: `%USERPROFILE%\vimfiles\pack\pkgload\opt\pkgload`
+  - Mac, Unix: `$HOME/.vim/pack/pkgload/opt/pkgload`
 - Neovim:
-  - Windows: `%LOCALAPPDATA%\nvim\site\pack\pkgman\opt\pkgman`
-  - Mac, Unix: `$HOME/.config/nvim/pack/pkgman/opt/pkgman`
+  - Windows: `%LOCALAPPDATA%\nvim\site\pack\pkgload\opt\pkgload`
+  - Mac, Unix: `$HOME/.config/nvim/pack/pkgload/opt/pkgload`
 
 If you keep your configuration files under version control using Git, it might
 make sense to include this repository as a submodule or subtree.
@@ -232,17 +232,17 @@ Reference
 
 ### Options
 
-Options are configured by setting global variables of the form `g:pkgman_*`.
+Options are configured by setting global variables of the form `g:pkgload_*`.
 
 ```
-Number g:pkgman_force_reload = 0
+Number g:pkgload_force_reload = 0
   If set to 1, reload plugins that have already been loaded.
 
-Number g:pkgman_silent = 1
+Number g:pkgload_silent = 1
   If set to 1, fail silently when a problem is encountered, such as a plugin
   being unavailable. If 0, produce error messages for problems.
 
-Number g:loaded_pkgman_plugin = 1
+Number g:loaded_pkgload_plugin = 1
   If set to 1, act as thought the plugin has already been loaded. Do not assign
   any commands and do not set any other options.
 ```
@@ -252,33 +252,33 @@ Number g:loaded_pkgman_plugin = 1
 All functions are autoloaded.
 
 ```
-pkgman#get_available_plugins() -> List[String]
+pkgload#get_available_plugins() -> List[String]
   Return plugins that are available to :packadd, in &runtimepath/pack/*/opt.
 
-pkgman#get_staged_plugins() -> List[String]
+pkgload#get_staged_plugins() -> List[String]
   Return plugins that are currently staged.
 
-pkgman#get_loaded_plugins() -> List[String]
+pkgload#get_loaded_plugins() -> List[String]
   Return plugins that have been successfully loaded.
 
-pkgman#get_failed_plugins() -> List[String]
+pkgload#get_failed_plugins() -> List[String]
   Return plugins that could not be loaded.
 
-pkgman#pkg_stage(String pkg)
+pkgload#pkg_stage(String pkg)
   Stage a plugin for loading.
 
-pkgman#pkg_stage_if(String pkg, String ...)
+pkgload#pkg_stage_if(String pkg, String ...)
   Stage a plugin for loading, if the plugins listed in ... have already been
   staged or loaded.
 
-pkgman#pkg_collect(String pkg, Int force)
+pkgload#pkg_collect(String pkg, Int force)
   Loop over staged plugins, attempting to load each one exactly once.
-  If force == 1 or g:pkgman_force_reload == 1, re-load plugins that have
+  If force == 1 or g:pkgload_force_reload == 1, re-load plugins that have
   already been loaded or failed to load.
 
-pkgman#pkg_add(String pkg, Int force, Int bypass_syn)
+pkgload#pkg_add(String pkg, Int force, Int bypass_syn)
   Attempt to load a plugin with :packadd.
-  If force == 1 or g:pkgman_force_reload == 1, re-load plugins that have
+  If force == 1 or g:pkgload_force_reload == 1, re-load plugins that have
   already been loaded or failed to load.
   If bypass_syn == 1, do not disable filetype detection and syntax highlighting
   before loading. You should rarely have to use this function directly, and you
@@ -286,7 +286,7 @@ pkgman#pkg_add(String pkg, Int force, Int bypass_syn)
   is required to ensure that ftplugin/* files are loaded.
 ```
 
-`pkgman#pkg_stage_if` is just a convenience method; it makes your startup files
+`pkgload#pkg_stage_if` is just a convenience method; it makes your startup files
 shorter and cleaner. You can implement similar functionality, or richer
 functionality, by using `:if` and other VimL language elements.
 
@@ -295,7 +295,7 @@ functionality, by using `:if` and other VimL language elements.
 The staged plugins can be inspected and modified before `:PkgCollect` is run.
 
 ```
-List g:pkgman_staged_plugins = []
+List g:pkgload_staged_plugins = []
   A list of names of staged plugins.
 ```
 
@@ -304,7 +304,7 @@ License
 
 This program is [free, as in freedom](https://www.gnu.org/licenses/quick-guide-gplv3.html).
 
-    Pkgman: a package loader for Neovim and Vim 8
+    Pkgload: a package loader for Neovim and Vim 8
     Copyright (C) 2017 Gregory Werbin
 
     This program is free software: you can redistribute it and/or modify

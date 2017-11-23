@@ -38,28 +38,28 @@ digraph "_anonymous_0" {
 		shape = "ellipse"
 		style = "solid"
 	]
-	"pkgman#pkg_stage_if()" [
+	"pkgload#pkg_stage_if()" [
 		fontsize = "14"
 		fontname = "Times-Roman"
 		fontcolor = "black"
 		shape = "ellipse"
 		style = "solid"
 	]
-	"pkgman#pkg_stage()" [
+	"pkgload#pkg_stage()" [
 		fontsize = "14"
 		fontname = "Times-Roman"
 		fontcolor = "black"
 		shape = "ellipse"
 		style = "solid"
 	]
-	"pkgman#pkg_collect()" [
+	"pkgload#pkg_collect()" [
 		fontsize = "14"
 		fontname = "Times-Roman"
 		fontcolor = "black"
 		shape = "ellipse"
 		style = "solid"
 	]
-	"pkgman#pkg_add()" [
+	"pkgload#pkg_add()" [
 		fontsize = "14"
 		fontname = "Times-Roman"
 		fontcolor = "black"
@@ -109,40 +109,40 @@ digraph "_anonymous_0" {
 			fontcolor = "black"
 			style = "solid"
 		]
-		"pkgman#pkg_stage_if()"
+		"pkgload#pkg_stage_if()"
 	}
-	":PkgAdd" -> "pkgman#pkg_stage()" [
+	":PkgAdd" -> "pkgload#pkg_stage()" [
 		fontsize = "14"
 		fontname = "Times-Roman"
 		fontcolor = "black"
 		style = "solid"
 	]
-	":PkgAddIf" -> "pkgman#pkg_stage_if()" [
+	":PkgAddIf" -> "pkgload#pkg_stage_if()" [
 		fontsize = "14"
 		fontname = "Times-Roman"
 		fontcolor = "black"
 		style = "solid"
 	]
-	":PkgCollect" -> "pkgman#pkg_collect()" [
+	":PkgCollect" -> "pkgload#pkg_collect()" [
 		fontsize = "14"
 		fontname = "Times-Roman"
 		fontcolor = "black"
 		style = "solid"
 	]
-	"pkgman#pkg_stage_if()" -> "pkgman#pkg_stage()" [
+	"pkgload#pkg_stage_if()" -> "pkgload#pkg_stage()" [
 		fontsize = "14"
 		fontname = "Times-Roman"
 		fontcolor = "black"
 		label = "Check dependencies"
 		style = "solid"
 	]
-	"pkgman#pkg_stage()" -> "pkgman#pkg_collect()" [
+	"pkgload#pkg_stage()" -> "pkgload#pkg_collect()" [
 		fontsize = "14"
 		fontname = "Times-Roman"
 		fontcolor = "black"
 		style = "solid"
 	]
-	"pkgman#pkg_collect()" -> "pkgman#pkg_add()" [
+	"pkgload#pkg_collect()" -> "pkgload#pkg_add()" [
 		fontsize = "14"
 		fontname = "Times-Roman"
 		fontcolor = "black"
