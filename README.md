@@ -29,7 +29,7 @@ or install plugins. It just helps you load them. It is very similar to
 comparison.
 
 In fact, Pkgman is mostly a wrapper around `:packadd`, a command that was added
-in Vim 8 and in recent releases of Neovim. It adds several convenience
+in Vim 8 and in recent releases of Neovim. Pkgman adds some convenience
 utilities and affords precise control over package loading without bloating your
 configuration files. This makes it easier to manage large numbers of plugins.
 I believe Pkgman provides enough control that it can be used to incorporate
@@ -137,10 +137,10 @@ I personally use [Plug](https://github.com/junegunn/vim-plug). Here is my setup:
 ├─ autoload/
 │  └─ plug.vim
 └─ pack/
-   ├─ plug/
-   │  ├─ asyncrun/                           ─┐
-   │  ├─ neoterm/                             │ These directories
-   │  ├─ vim-surround/                        │ are managed by Plug
+   ├─ plug/                                  ─┐
+   │  ├─ asyncrun/                            │ These directories
+   │  ├─ neoterm/                             │ are managed by Plug
+   │  ├─ vim-surround/                        │ 
    │  └─ vim-unimpaired/                     ─┘
    ├─ github/                                ─┐
    │  └─ ... stuff i cloned from GitHub ...   │ These directories
@@ -151,12 +151,12 @@ I personally use [Plug](https://github.com/junegunn/vim-plug). Here is my setup:
 **init.vim**
 ```vim
 PkgAdd asyncrun.vim
-
 " Disable a package without uninstalling it
 "PkgAdd neoterm
-
 PkgAdd vim-unimpaired
 PkgAdd vim-surround
+
+PkgCollect
 
 " Load plug-install.vim in place of my Vimrc, run the install commands, and quit
 let s:plug_install = 'C:\Users\GMWERB\AppData\Local\nvim\plug-install.vim'
