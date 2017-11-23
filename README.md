@@ -1,7 +1,5 @@
-Pkgman
-======
-
-= :package: + :man:
+Pkgman = 👨 + 📦
+================
 
 ## What is it?
 
