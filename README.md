@@ -323,9 +323,9 @@ This program is [free, as in freedom](https://www.gnu.org/licenses/quick-guide-g
 Todos
 -----
 
-- Make it possible to specify specifically which "repo" (subdirectory of
+[] Make it possible to specify specifically which "repo" (subdirectory of
   `pack/`) to load a package from.
-- Deprecate PkgAddIf and use an options dictionary à la Plug.
-- Write tests and check for startup performance issues.
-- Consider changing function names: am I "adding" or "staging"?
-- Add a table of contents to the documentation
+[] Deprecate PkgAddIf and use an options dictionary à la Plug.
+[] Write tests and check for startup performance issues.
+[] Consider changing function names: am I "adding" or "staging"?
+[x] Add a table of contents to the documentation
