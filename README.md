@@ -1,5 +1,5 @@
-Pkgload = 📦 + 👨 
-================
+Pkgload
+=======
 
 * [Introduction](#introduction)
   + [What is it?](#what-is-it)
