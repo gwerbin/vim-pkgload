@@ -14,6 +14,8 @@ Pkgload
   + [Commands](#commands)
   + [Options](#options)
   + [Functions](#functions)
+    - [Querying functions](#querying-functions)
+    - [Action functions](#action-functions)
   + [Internals](#internals)
 * [License](#license)
 * [Todos](#todos)
@@ -42,30 +44,27 @@ conjunction with Pkgload. There are several high-quality options available,
 including [Vundle](https://github.com/VundleVim/Vundle.vim),
 [Plug](https://github.com/junegunn/vim-plug),
 [Dein](https://github.com/Shougo/dein.vim),
+[Minipac](https://github.com/k-takata/minpac),
 [VAM](https://github.com/MarcWeber/vim-addon-manager), and
 [Flavor](https://relishapp.com/kana/vim-flavor). See [Usage](#usage) for
-instructions on using these programs together.
+instructions on using Pkgload in conjunction with one of these programs.
 
 ### Why should I use it?
 
 You should use Pkgload if:
-- You do not like to mix "loading" and "installation".
-- You want to exercise control over what you load and when you load it.
-- You want to be able to programmatically examine packages that have
-  been loaded.
-- You want to be able to reload packages on-the-fly without reloading
-  your initialization file or restarting Vim.
-- You are already comfortable with a Vim plugin manager, or you do not
-  mind installing and upgrading lots of plugins by hand.
+- You are a plugin developer and you want to be able to load new plugins
+  on-the-fly and unobtrusively without having to interrupt your workflow.
+- You are a perfectionist Vim hacker, and you want to exercise fine control
+  over exactly what is loaded and when it is loaded.
+- You are already comfortable with a Vim plugin manager, or you do not mind
+  installing and upgrading lots of plugins by hand.
 - You are a Pathogen user and you are curious.
-- You are a plugin developer or just a perfectionist Vim hacker, and you
-  want an easy way to load plugins dynamically.
 
 You should not use Pkgload if:
 - You like the fact that most plugin managers also load plugins for you.
-- You don't use a lot of plugins.
 - You don't want to have to manage plugins separately, and/or your don't
   want to use or learn a second piece of software for plugin management.
+- You don't use a lot of plugins.
 
 ### Differences with Pathogen
 
@@ -96,7 +95,6 @@ You should not use Pkgload if:
   [surround](https://github.com/tpope/vim-surround), and
   [unimpaired](https://github.com/tpope/vim-unimpaired), as well as the
   classic [Git commit message style guide](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html).
-
 
 Usage
 -----
@@ -155,6 +153,8 @@ PkgAdd asyncrun.vim
 "PkgAdd neoterm
 PkgAdd vim-unimpaired
 PkgAdd vim-surround
+
+
 
 PkgCollect
 
@@ -250,7 +250,9 @@ Number g:loaded_pkgload_plugin = 1
 
 ### Functions
 
-All functions are autoloaded.
+#### Querying functions
+
+These functions query the state of the package loader without side-effects.
 
 ```
 pkgload#get_available_plugins() -> List[String]
@@ -264,41 +266,95 @@ pkgload#get_loaded_plugins() -> List[String]
 
 pkgload#get_failed_plugins() -> List[String]
   Return plugins that could not be loaded.
+  
+pkgload#get_staging() -> String
+  Return the plugin currently being staged, inside :PkgAdd. For use in
+  autocommands.
 
+pkgload#get_loading() -> String
+  Return the plugin currently being loaded, inside :PkgCollect. For use in
+  autocommands.
+```
+
+#### Action functions
+
+These functions implement package loading. They are called for their side-
+effects, and do not return anything. In the future, they might return
+a status code to indicate success or various types of failure.
+
+```
 pkgload#pkg_stage(String pkg)
   Stage a plugin for loading.
 
 pkgload#pkg_stage_if(String pkg, String ...)
   Stage a plugin for loading, if the plugins listed in ... have already been
   staged or loaded.
+      
+  This is just a convenience method. You can implement similar functionality, or
+  richer functionality, with VimL commands like `:if`.
 
 pkgload#pkg_collect(String pkg, Int force)
-  Loop over staged plugins, attempting to load each one exactly once.
-  If force == 1 or g:pkgload_force_reload == 1, re-load plugins that have
-  already been loaded or failed to load.
+  Loop over staged plugins, attempting to load each one exactly once with
+  pkgload#pkg_add(). If force == 1 or g:pkgload_force_reload == 1, re-load
+  plugins that have already been loaded or failed to load.
 
 pkgload#pkg_add(String pkg, Int force, Int bypass_syn)
   Attempt to load a plugin with :packadd.
+  
   If force == 1 or g:pkgload_force_reload == 1, re-load plugins that have
   already been loaded or failed to load.
+  
   If bypass_syn == 1, do not disable filetype detection and syntax highlighting
   before loading. You should rarely have to use this function directly, and you
   should probably not use this option. Disabling filetype and syntax detection
   is required to ensure that ftplugin/* files are loaded.
 ```
 
-`pkgload#pkg_stage_if` is just a convenience method; it makes your startup files
-shorter and cleaner. You can implement similar functionality, or richer
-functionality, by using `:if` and other VimL language elements.
+### Autocommands
 
-### Internals
-
-The staged plugins can be inspected and modified before `:PkgCollect` is run.
+Pkgload defines custom `User` autocommand events.
 
 ```
-List g:pkgload_staged_plugins = []
-  A list of names of staged plugins.
+User PkgStagePre
+  Before staging a package with :PkgAdd
+
+User PkgStagePost
+  After staging a package with :PkgAdd
+
+User PkgCollectPre
+  Before loading staged packages with :PkgCollect
+
+User PkgCollectPost
+  After loading staged packages with :PkgCollect
+
+User PkgAddPre
+  Before loading each staged packge inside :PackageCollect
+
+User PkgAddPost
+  After loading each staged packge inside :PackageCollect
 ```
+
+For example, you can use this to automate dependency loading:
+
+```vim
+augroup MyPlugins
+  autocommand User PkgStagePre if pkgload#get_staging() == 'vim-easytags' | PkgAdd | endif
+augroup END
+```
+
+### Internal state variables
+
+Most internal state is not user-accessible. However, the staged plugins can be
+inspected and modified before `:PkgCollect` is run.
+
+```
+List[String] g:pkgload_staged_plugins = []
+  A list of names of staged plugins. This can be used to inspect and modify the
+  list of staged plugins before `:PkgCollect` is run.
+```
+
+Examples
+-------
 
 License
 -------
@@ -324,11 +380,19 @@ This program is [free, as in freedom](https://www.gnu.org/licenses/quick-guide-g
 Todos
 -----
 
-- Make it possible to specify specifically which "repo" (subdirectory of
-  `pack/`) to load a package from.
-- Deprecate PkgAddIf and use an options dictionary à la Plug.
+- Make it possible to specify which "repo" (subdirectory of `pack/`) to load a
+  package from
+- Deprecate PkgAddIf
 - Write tests and check for startup performance issues.
-- Consider changing function names: am I "adding" or "staging"?
-- Set up on-package-stage, on-package-load, and on-package-fail autocommands
 - How can I make it possible to "unload" a plugin?? Experiment by "diffing"
   options, autocommands, etc.
+- "Object-oriented" API for plugins, e.g. pkgload#get_current().path -> path to
+  plugin directory
+- Remove `_plugin` suffix and `pkg_` prefix from function names
+- Set up on-package-fail autocommand
+- Figure out how to include the name of the currently-staging/loading package
+  in the autocommand (probably something like `execute 'doautocmd User PkgLoad-'.a:pkg'`)
+- Change "add" to "stage" in all function/command names
+- Change "collect" to "load" in all function/command names
+- Create :PkgAdd which stages and loads all in one step
+- Use a "dict" like in Vim-Plug for passing options through PackAdd, e.g. :PackAdd { 'force': 1 }
