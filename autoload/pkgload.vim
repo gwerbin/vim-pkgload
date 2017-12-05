@@ -33,12 +33,29 @@ function! pkgload#get_failed_plugins() abort
   return s:plugins.failed
 endfunction
 
+let s:current_staging = ''
+function! pkgload#get_staging() abort
+  return s:current_staging
+endfunction
+
+let s:current_loading = ''
+function! pkgload#get_loading() abort
+  return s:current_loading
+endfunction
+
 
 "'' Do plugin things ''"
 
 " Stage a plugin for loading.
 function! pkgload#pkg_stage(pkg) abort
-  add(s:plugins.staged, a:pkg)
+  let s:current_staging = a:pkg
+  try
+    doautocmd <nomodeline> User PkgStagePost
+    add(s:plugins.staged, a:pkg)
+    doautocmd <nomodeline> User PkgStagePre
+  finally
+    let s:current_staging = ''
+  endtry
 endfunction
 
 " Stage a plugin for loading only if other plugins have already been loaded or staged
@@ -91,20 +108,33 @@ endfunction
 " Un-stage and load plugins one at a time.
 function! pkgload#pkg_collect(force) abort
   let [l:ftcmd, l:syncmd] = s:ftsyn_unset()
+
   let l:force = a:force || g:pkgload_force_add
 
   pkgload#utils#unique_inplace(s:plugins.staged)
+  
+  doautocmd <nomodeline> User PkgCollectPre
 
   while len(s:plugins.staged)
-    let l:pkg = remove(s:plugins.staged, 0)
-    
-    let l:failed_ix = index(s:plugins.failed, l:pkg)
-    if l:failed_ix > 0
-      remove(s:plugins.failed, l:failed_ix)
-    endif
+    doautocmd <nomodeline> User PkgAddPre
 
-    call pkgload#pkg_add(l:pkg, l:force, 1)
+    let l:pkg = remove(s:plugins.staged, 0)
+    let s:current_loading = l:pkg
+    
+    try
+      let l:failed_ix = index(s:plugins.failed, l:pkg)
+      if l:failed_ix > 0
+        remove(s:plugins.failed, l:failed_ix)
+      endif
+  
+      call pkgload#pkg_add(l:pkg, l:force, 1)
+      doautocmd <nomodeline> User PkgAddPost
+    finally
+      let s:current_loading = ''
+    endtry
   endfor
+  
+  doautocmd <nomodeline> User PkgCollectPost
 
   s:ftsyn_reset(l:ftcmd, l:syncmd)
 endfunction
